@@ -12,7 +12,7 @@ dev:
   step:
     - setup-go-workspace:
         package-dir: github.com/cloudnativego/hello
-    -script:
+    - script:
         name: env
         code: env
         
@@ -25,7 +25,7 @@ dev:
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
           glide install    
           
-    -internal/watcch:
+    - internal/watcch:
           code: go run main.go
           reload: true
         
@@ -48,7 +48,7 @@ build:
     - setup-go-workspace
         package-dir: github.com/cloudnativego/hello
         
-    -script:
+    - script:
         name: env
         code: env
 
@@ -81,7 +81,7 @@ build:
           
   deploy:
    steps:
-     -internal/docker-push:
+     - internal/docker-push:
         username:892271971
         password:892271971
         cmd: /pipeline/source/hello
