@@ -10,7 +10,7 @@ box: golang
 
 dev:
   step:
-    - setup-go-workspace:
+    #- setup-go-workspace:
        # package-dir: github.com/cloudnativego/hello
     - script:
         name: env
