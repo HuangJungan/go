@@ -8,6 +8,27 @@ box: golang
 # Read more about pipelines on our dev center
 # http://devcenter.wercker.com/docs/pipelines/index.html
 
+dev:
+  step:
+    - setup-go-workspace:
+        package-dir: github.com/cloudnativego/hello
+    -script:
+        name: env
+        code: env
+        
+    - script:
+        name: go get
+        code: |      
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get -u github.com/Masterminds/glide
+          export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
+          glide install    
+          
+    -internal/watcch:
+          code: go run main.go
+          reload: true
+        
 # You can also use services such as databases. Read more on our dev center:
 # http://devcenter.wercker.com/docs/services/index.html
 # services:
@@ -25,6 +46,11 @@ build:
     # Sets the go workspace and places you package
     # at the right place in the workspace tree
     - setup-go-workspace
+        package-dir: github.com/cloudnativego/hello
+        
+    -script:
+        name: env
+        code: env
 
     # Gets the dependencies
     - script:
@@ -52,6 +78,18 @@ build:
         name: copy file to wercker output
         code: |
           cp -R ./ ${WERCKER_SOURCE_DIR}    
+          
+  deploy:
+   steps:
+     -internal/docker-push:
+        username:892271971
+        password:892271971
+        cmd: /pipeline/source/hello
+        port: "8080"
+        tag: latest
+        repository:cloudnativego/book-hello
+        registry: http://registry.hub.docker.com
+        
 
 
     
